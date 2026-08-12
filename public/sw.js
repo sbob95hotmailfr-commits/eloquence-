@@ -27,6 +27,25 @@ self.addEventListener("fetch", (event) => {
   // Never cache API calls (Claude, transcription, Supabase) — always network.
   if (request.url.includes("/api/")) return;
 
+  // Pages (navigations) go network-first: after a deploy, users must see the
+  // latest build, not a stale cached page. Only fall back to cache when
+  // truly offline.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match(OFFLINE_URL)))
+    );
+    return;
+  }
+
+  // Static assets (fonts, icons, chunks) can stay cache-first for speed.
   event.respondWith(
     caches.match(request).then((cached) => {
       const network = fetch(request)
