@@ -57,7 +57,7 @@ export function ConversationRoom({
     phaseRef.current = phase;
   }, [phase]);
 
-  const { speak, interrupt, isSpeaking } = useSpeechSynthesis();
+  const { speak, interrupt, isSpeaking, unlock } = useSpeechSynthesis();
   useAmbientNoise(publicSimulation);
 
   useEffect(() => {
@@ -78,7 +78,10 @@ export function ConversationRoom({
   useVoiceActivity(stream, {
     silenceThresholdMs,
     graceMs: 700,
-    speechConfirmMs: 400,
+    // Plancher bas de la fourchette 300-500ms imposée pour l'interruption :
+    // réduit la portion de début de phrase perdue avant que l'enregistrement
+    // ne démarre (la détection d'interruption précède forcément la capture).
+    speechConfirmMs: 300,
     onSilenceConfirmed: () => {
       if (phaseRef.current === "listening" && inputMode === "auto") {
         stopListeningAndSend();
@@ -115,6 +118,11 @@ export function ConversationRoom({
       };
       recorderRef.current = recorder;
       recorder.start();
+      // L'encodeur MediaRecorder perd souvent ses toutes premières centaines
+      // de ms après start() (initialisation du pipeline) — on attend un peu
+      // avant d'inviter l'utilisateur à parler pour ne pas couper le début
+      // de la phrase.
+      await new Promise((resolve) => setTimeout(resolve, 300));
       setPhase("listening");
     } catch {
       setErrorMsg("Micro non autorisé. Vérifiez les permissions de votre navigateur.");
@@ -289,7 +297,13 @@ export function ConversationRoom({
               Simulation de public (bruit ambiant léger)
             </label>
           </div>
-          <Button className="w-full mt-4" onClick={startListening}>
+          <Button
+            className="w-full mt-4"
+            onClick={() => {
+              unlock();
+              startListening();
+            }}
+          >
             Commencer
           </Button>
         </Card>

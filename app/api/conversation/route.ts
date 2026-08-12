@@ -83,7 +83,11 @@ export async function POST(request: Request) {
   try {
     const response = await anthropic.messages.create({
       model: CLAUDE_MODEL,
-      max_tokens: 1024,
+      // Plafond volontairement bas : le prompt impose des réponses courtes et
+      // naturelles à l'oral, et un plafond réduit accélère la génération et
+      // la synthèse vocale qui suit — sans streaming, c'est le principal
+      // levier de latence disponible.
+      max_tokens: 300,
       system: systemPrompt,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
     });
