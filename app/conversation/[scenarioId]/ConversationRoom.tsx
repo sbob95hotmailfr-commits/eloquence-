@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useVoiceActivity } from "@/lib/audio/useVoiceActivity";
-import { useSpeechSynthesis } from "@/lib/audio/useSpeechSynthesis";
+import { useTextToSpeech } from "@/lib/audio/useTextToSpeech";
 import { useAmbientNoise } from "@/lib/audio/useAmbientNoise";
 import { updateScenarioProgress } from "@/lib/progression";
 import { saveSuggestedVocabulary, markVocabularyReused } from "@/lib/vocabulaire";
@@ -57,7 +57,7 @@ export function ConversationRoom({
     phaseRef.current = phase;
   }, [phase]);
 
-  const { speak, interrupt, isSpeaking, unlock } = useSpeechSynthesis();
+  const { speak, interrupt, isSpeaking, unlock } = useTextToSpeech();
   useAmbientNoise(publicSimulation);
 
   useEffect(() => {
