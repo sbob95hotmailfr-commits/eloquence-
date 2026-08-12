@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1C2333"/>
+  <text x="50%" y="58%" text-anchor="middle" font-family="Georgia, serif" font-size="220" fill="#F3EFE6">É</text>
+  <rect x="140" y="360" width="60" height="14" rx="7" fill="#B08D57"/>
+  <rect x="220" y="360" width="90" height="14" rx="7" fill="#B08D57"/>
+  <rect x="330" y="360" width="120" height="14" rx="7" fill="#B08D57"/>
+</svg>

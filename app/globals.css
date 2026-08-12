@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-encre: #1c2333;
+  --color-parchemin: #f3efe6;
+  --color-rouge-correcteur: #c1432e;
+  --color-laiton: #b08d57;
+
+  --background: var(--color-parchemin);
+  --foreground: var(--color-encre);
+  --surface: #ffffff;
+  --surface-muted: #e9e3d5;
+  --border-subtle: #d8d0bd;
+  /* Indique explicitement au navigateur le thème actif : sans ça, Chrome peut
+     réassombrir automatiquement nos couleurs (forced dark mode) même quand
+     data-theme="light" est posé, en ignorant nos variables CSS. */
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-theme="dark"] {
+  --background: var(--color-encre);
+  --foreground: var(--color-parchemin);
+  --surface: #242c42;
+  --surface-muted: #2c3550;
+  --border-subtle: #3a4460;
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --background: var(--color-encre);
+    --foreground: var(--color-parchemin);
+    --surface: #242c42;
+    --surface-muted: #2c3550;
+    --border-subtle: #3a4460;
+    color-scheme: dark;
   }
+}
+
+@theme inline {
+  --color-encre: var(--color-encre);
+  --color-parchemin: var(--color-parchemin);
+  --color-rouge-correcteur: var(--color-rouge-correcteur);
+  --color-laiton: var(--color-laiton);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border-subtle: var(--border-subtle);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-jetbrains);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), serif;
+}
+
+.font-mono-util {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Marque de pause — longueur = durée du silence détecté */
+.pause-mark {
+  font-family: var(--font-mono), monospace;
+  color: var(--color-laiton);
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+/* Marge d'annotation façon manuscrit annoté */
+.annotation-margin {
+  border-left: 1px dashed var(--border-subtle);
+  font-family: var(--font-display), serif;
+  font-style: italic;
+}
+
+.annotation-margin .annotation-faible {
+  color: var(--color-rouge-correcteur);
+}
+
+.annotation-margin .annotation-force {
+  color: var(--color-laiton);
 }
