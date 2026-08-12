@@ -88,10 +88,6 @@ export async function POST(request: Request) {
       // la synthèse vocale qui suit — sans streaming, c'est le principal
       // levier de latence disponible.
       max_tokens: 300,
-      // Effort bas : répliques de personnage courtes et naturelles, pas de
-      // raisonnement complexe à faire — réduit la latence sans dégrader la
-      // tâche (contrairement au feedback, où l'effort reste par défaut).
-      output_config: { effort: "low" },
       system: systemPrompt,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
     });
