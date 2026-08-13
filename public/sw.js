@@ -61,3 +61,33 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
+self.addEventListener("push", (event) => {
+  let data = { title: "Éloquence", body: "C'est l'heure de votre entraînement.", url: "/dashboard" };
+  try {
+    if (event.data) data = { ...data, ...event.data.json() };
+  } catch {
+    // payload non-JSON — on garde le message par défaut.
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icons/icon.svg",
+      badge: "/icons/icon.svg",
+      data: { url: data.url },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || "/dashboard";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window" }).then((clients) => {
+      const existing = clients.find((c) => c.url.includes(url));
+      if (existing) return existing.focus();
+      return self.clients.openWindow(url);
+    })
+  );
+});

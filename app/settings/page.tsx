@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { signOut } from "@/app/login/actions";
 import { updateObjectifHebdo, deleteAllRecordings } from "./actions";
+import { NotificationToggle } from "@/components/settings/NotificationToggle";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -69,6 +70,9 @@ export default async function SettingsPage() {
           </label>
           <Button type="submit">Enregistrer</Button>
         </form>
+        <div className="mt-4 pt-4 border-t border-border-subtle">
+          <NotificationToggle />
+        </div>
       </Card>
 
       <Card>

@@ -32,8 +32,9 @@ Router) + Supabase + Claude.
    Supabase) dans l'ordre :
 
    ```bash
-   supabase/migrations/0001_init.sql   # schéma + policies RLS (4 par table)
-   supabase/migrations/0002_seed.sql   # thèmes + 6 scénarios de conversation
+   supabase/migrations/0001_init.sql              # schéma + policies RLS (4 par table)
+   supabase/migrations/0002_seed.sql              # thèmes + 6 scénarios de conversation
+   supabase/migrations/0003_push_subscriptions.sql # notifications push (rappels)
    ```
 
    Le bucket de stockage privé `recordings` est créé automatiquement par la
@@ -67,6 +68,23 @@ npm run build       # build de production
 5. Dans Supabase → Authentication → URL Configuration, ajoutez l'URL Vercel aux
    *Redirect URLs* (`https://votre-app.vercel.app/auth/callback`).
 6. Déployez.
+
+### Rappels intelligents (notifications push)
+
+1. Générez une paire de clés VAPID :
+
+   ```bash
+   npx web-push generate-vapid-keys
+   ```
+
+2. Ajoutez `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` et un
+   `CRON_SECRET` (chaîne aléatoire longue) dans les variables d'environnement
+   Vercel.
+3. Le fichier `vercel.json` déclare un cron (`/api/cron/reminders`) exécuté
+   toutes les heures — Vercel l'active automatiquement au déploiement, sans
+   configuration supplémentaire côté dashboard. Il envoie un rappel aux
+   utilisateurs ayant activé les notifications et pas encore pratiqué ce
+   jour-là, à leur heure de pratique habituelle.
 
 ## Architecture
 

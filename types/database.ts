@@ -17,6 +17,7 @@ export interface Database {
           objectif_hebdo: string | null;
           vad_silence_seuil_ms: number | null;
           heure_pratique_habituelle: string | null;
+          notifications_activees: boolean | null;
           created_at: string;
         };
         Insert: Partial<Database["public"]["Tables"]["user_profiles"]["Row"]> & {
@@ -151,6 +152,24 @@ export interface Database {
           mot: string;
         };
         Update: Partial<Database["public"]["Tables"]["vocabulaire_a_reviser"]["Row"]>;
+        Relationships: [];
+      };
+      push_subscriptions: {
+        Row: {
+          id: string;
+          user_id: string;
+          endpoint: string;
+          p256dh: string;
+          auth: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["push_subscriptions"]["Row"]> & {
+          user_id: string;
+          endpoint: string;
+          p256dh: string;
+          auth: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["push_subscriptions"]["Row"]>;
         Relationships: [];
       };
     };
